@@ -54,7 +54,7 @@ use crate::{
 ///
 /// See the module-level docs for more information on the event loop manages each event.
 #[derive(Debug, PartialEq)]
-pub enum Event<'a, T: 'static> {
+pub enum Event<'a, T: 'a> {
     /// Emitted when new events arrive from the OS to be processed.
     ///
     /// This event type is useful as a place to put code that should be done before you start
@@ -301,7 +301,9 @@ impl<'a, T> Event<'a, T> {
             Resumed => Ok(Resumed),
         }
     }
+}
 
+impl<'a, T: 'static> Event<'a, T> {
     /// If the event doesn't contain a reference, turn it into an event with a `'static` lifetime.
     /// Otherwise, return `None`.
     pub fn to_static(self) -> Option<Event<'static, T>> {
